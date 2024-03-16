@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id"
+        content="84597624309-hsof5bqu054uf4u1fu746qsgql9b35tj.apps.googleusercontent.com">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <title>Login</title>
+</head>
+
+<body>
+
+  <div id="g_id_onload"
+  data-client_id="430031612172-voqa4vlaal68oor5atsrl33ths2d4bvu.apps.googleusercontent.com"
+  data-context="signup"
+  data-ux_mode="popup"
+  data-callback="onSignIn"
+  data-login_uri="terceros/index.html"
+  data-auto_prompt="false">
+</div>
+
+<div class="g_id_signin"
+  data-type="standard"
+  data-shape="rectangular"
+  data-theme="outline"
+  data-text="signin_with"
+  data-size="large"
+  data-logo_alignment="left">
+</div>
+
+
+    <a href="#" id="logoutButton" onclick="signOut();" style="display: none;">Sign out</a>
+</body>
+<script>
+
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+
+    auth2.signOut().then(function () {
+      
+      console.log('User signed out.');
+    });
+  }
+
+  function onSignIn(googleUser) {
+    const credential = googleUser.credential;
+    console.log('credential: ' + credential);
+
+    const parts = credential.split('.');
+    const payload = parts[1];
+
+    const decodedPayload = decodeBase64Url(payload);
+
+    const payloadObject = JSON.parse(decodedPayload);
+
+    console.log('name: ', payloadObject.name);
+    console.log('given_name: ', payloadObject.given_name);
+    console.log('family_name: ', payloadObject.family_name);
+    console.log('email: ', payloadObject.email);
+
+    document.getElementById('logoutButton').style.display = 'block';
+    document.getElementsByClassName('g_id_signin')[0].style.display = 'none';
+  }
+
+  function decodeBase64Url(input){
+    const replacedInput = input.replace(/-/g, '+').replace(/_/g, '/');
+    return atob(replacedInput);
+  }
+
+  function signOut(){
+    console.log('sesion cerrada');
+    document.getElementById('logoutButton').style.display = 'none';
+    document.getElementsByClassName('g_id_signin')[0].style.display = 'block';
+  }
+</script>
+
+</html>
